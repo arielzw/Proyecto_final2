@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 import requests
-
+#import pandas as pd
+import sqlite3
+from pathlib import Path
 
 # url = "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2022-07-01/2022-08-01?adjusted=true&sort=asc&limit=5000"
 # api_key = "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i"
@@ -13,9 +15,14 @@ class Polygon_API:
 
     def get(self):
 
-        self.__ticker = self.get_ticker()
-        self.__first_date = self.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        self.__end_date = self.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
+        self.__ticker = "MELI"
+        self.__first_date = "2022-08-22"
+        self.__end_date = "2022-08-26"
+
+
+        # self.__ticker = self.get_ticker()
+        # self.__first_date = self.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
+        # self.__end_date = self.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
 
         header = {
             "Authorization": "Bearer " + self.__api_key
@@ -27,8 +34,34 @@ class Polygon_API:
                              self.__end_date + "?adjusted=true&sort=asc&limit=15000"
 
         response = requests.get(self.__request_url, headers=header)
-        print(response.json())
+        # Se transforma el diccionario en una dataframe de panda oriendado en columnas (opción index)
+        lista_datos = response.json()['results']
 
+        # Se agrega una columna "Fecha" con la mecha en YYYY-MM-DD convertida desde el timestamp de la columna t
+        # pd_datos['Fecha'] = [datetime.fromtimestamp(x/1000).strftime('%Y-%m-%d') for x in pd_datos['t']]
+
+        columns = ', '.join(lista_datos[0].keys())
+        print(columns)
+        # columns = ', '.join(pd_datos.keys())
+
+        #TODO: Se debe modificar porque cuando se ingresan los datos se debe crear una nueva tabla por lo que se
+        #debe verificar si existe en otro lugar
+        path = Path('Base.db')
+        if path.exists():
+            con = sqlite3.connect('Base.db')
+            cur = con.cursor()
+        else:
+            con = sqlite3.connect('Base.db')
+            cur = con.cursor()
+            cur.execute("CREATE TABLE MELI(" + columns + ")")
+
+        query = 'INSERT INTO MELI VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
+
+        for dic in lista_datos:
+            cur.execute(query, tuple(dic.values()))
+        con.commit()
+
+        input()
 
     def get_ticker(self):
         ticker = input("Ingrese el ticker: ").upper()
