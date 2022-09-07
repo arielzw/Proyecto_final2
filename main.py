@@ -19,7 +19,8 @@ while(Repetir):
     if(Option == "1"):
         db.save(api.get())
     if(Option == "2"):
-        show_data()
+        db.read('MELI', '2022-01-03', '2022-02-01')
+        #show_data()
     if (Option == "3"):
         print("Programa terminado")
         Repetir = False

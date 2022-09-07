@@ -12,13 +12,13 @@ class Polygon_API:
 
     def get(self):
 
-        # self.__ticker = "SHOP"
-        # self.__first_date = "2022-01-10"
-        # self.__end_date = "2022-01-26"
+        self.__ticker = "MELI"
+        self.__start_date = "2022-01-01"
+        self.__end_date = "2022-02-01"
 
-        self.__ticker = self.get_ticker()
-        self.__first_date = self.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        self.__end_date = self.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
+        # self.__ticker = self.get_ticker()
+        # self.__start_date = self.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
+        # self.__end_date = self.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
 
         header = {
             "Authorization": "Bearer " + self.__api_key
@@ -26,7 +26,7 @@ class Polygon_API:
 
         print("Obteniendo datos...")
 
-        self.__request_url = self.__url + "/aggs/ticker/" + self.__ticker + "/range/1/day/" + self.__first_date + "/" + \
+        self.__request_url = self.__url + "/aggs/ticker/" + self.__ticker + "/range/1/day/" + self.__start_date + "/" + \
                              self.__end_date + "?adjusted=true&sort=asc&limit=15000"
 
         response = requests.get(self.__request_url, headers=header)

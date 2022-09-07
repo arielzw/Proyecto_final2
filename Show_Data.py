@@ -1,3 +1,12 @@
+from Polygon_API import *
 
-def show_data():
-    print("Mostrando datos...")
+class Show_Data():
+
+    def show(self, data_dict):
+        print('hola')
+
+
+
+
+
+
