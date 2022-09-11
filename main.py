@@ -7,27 +7,47 @@ api = Polygon_API("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i
 db = DataBase('Base.db')
 show = Show_Data()
 
-Repetir = True
+repetir_1 = True
 
-while(Repetir):
+while repetir_1:
+    print("\nIngrese una opción:")
     print("1. Actualización de datos")
     print("2. Visualización de datos")
     print("3. Para salir")
+    option_1 = input("¿Opción? ")
 
-    Option = input("\n¿Opción? ")
-
-    if(Option == "1"):
+    if option_1 == '1':
         db.save(api.get())
-    if(Option == "2"):
-        # ticker = api.get_ticker()
-        # dt_from = api.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        # dt_to = api.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
-        ticker = 'MELI'
-        dt_from = '2022-01-01'
-        dt_to = '2022-02-01'
-        data = db.read(ticker, dt_from, dt_to)
-        show.show(data, ticker)
-    if (Option == "3"):
+
+    elif option_1 == '2':
+        repetir_2 = True
+
+        while repetir_2:
+            print("\nIngrese una opción:")
+            print("1. Ver resumen")
+            print("2. Ver gráfico")
+            print("3. Volver")
+            option_2 = input("¿Opción? ")
+
+            if option_2 == '1':
+                db.summary()
+
+            elif option_2 == '2':
+                #ticker = api.get_ticker()
+                ticker = 'MELI'
+                data = db.read(ticker)
+                show.graph(data, ticker)
+
+            elif (option_2 == '3'):
+                repetir_2 = False
+
+            else:
+                print("Ingreso incorrecto !!!")
+
+    elif option_1 == '3':
         print("Programa terminado")
-        Repetir = False
+        repetir_1 = False
+
+    else:
+        print("Ingreso incorrecto !!!")
 

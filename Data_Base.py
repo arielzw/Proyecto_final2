@@ -23,18 +23,33 @@ class DataBase:
 
         self.con.commit()
 
-    def read(self, ticker, from_date, to_date):
-        #Se suma 7200 para corregir la zona horaria, ya que BUE es -5 y NYC es -3. El timestamp devuelto por la api de
-        #polygon está en ms referido a UTC -5
+    def summary(self):
+        self.cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = self.cur.fetchall() #tables es una lista de tuplas de un elemento
+
+        for table_name in tables:
+            #se debe colocar table_name[0] para que devuelva el valor y no una tupla de un elemento
+            table = pd.read_sql_query("SELECT * from %s ORDER BY t ASC" % table_name[0], self.con, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
+            print(str(table_name[0]) + ' - ' + str(table.t[0]) + ' <--> ' + str(list(table.t)[-1]))
+
+    def read(self, ticker):
+        self.__ticker = ticker
+        consulta = 'SELECT * FROM ' + self.__ticker + ' ORDER BY t ASC'
+        dt_frame = pd.read_sql(con=self.con, sql=consulta, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
+        return dt_frame
+
+    def read2(self, ticker, from_date, to_date):
+        # Se suma 7200 para corregir la zona horaria, ya que BUE es -5 y NYC es -3. El timestamp devuelto por la api de
+        # polygon está en ms referido a UTC -5
         ts_from = int(1000 * (7200 + datetime.timestamp(datetime.strptime(from_date, '%Y-%m-%d'))))
         ts_to = int(1000 * (7200 + datetime.timestamp(datetime.strptime(to_date, '%Y-%m-%d'))))
         self.__ticker = ticker
 
-        consulta = 'SELECT * FROM ' + self.__ticker + ' WHERE t BETWEEN ' + str(ts_from) + ' AND ' + str(ts_to) + ' ORDER BY t ASC'
+        consulta = 'SELECT * FROM ' + self.__ticker + ' WHERE t BETWEEN ' + str(ts_from) + ' AND ' + str(
+            ts_to) + ' ORDER BY t ASC'
         dt_frame = pd.read_sql(con=self.con, sql=consulta, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
 
         return dt_frame
-
 
     def crear_tabla(self):
         columns = ', '.join(self.__lista[0].keys())

@@ -1,9 +1,6 @@
 from datetime import datetime, timedelta
 import requests
 
-# url = "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2022-07-01/2022-08-01?adjusted=true&sort=asc&limit=5000"
-# api_key = "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i"
-
 class Polygon_API:
     def __init__(self, url, key):
         self.__url = url
@@ -12,13 +9,13 @@ class Polygon_API:
 
     def get(self):
 
-        self.__ticker = "MELI"
-        self.__start_date = "2022-01-01"
-        self.__end_date = "2022-02-01"
+        #self.__ticker = "MELI"
+        self.__start_date = "2021-01-01"
+        self.__end_date = "2022-08-01"
 
-        # self.__ticker = self.get_ticker()
-        # self.__start_date = self.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
-        # self.__end_date = self.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
+        self.__ticker = self.get_ticker()
+        # self.__start_date = self.get_date("Ingrese la fecha de inicio (YYYY-MM-DD):\n")
+        # self.__end_date = self.get_date("Ingrese la fecha de fin (YYYY-MM-DD):\n")
 
         header = {
             "Authorization": "Bearer " + self.__api_key
@@ -31,12 +28,14 @@ class Polygon_API:
 
         response = requests.get(self.__request_url, headers=header)
 
+#TODO: Implementar aquí manejo de errores de red y reconexiones (EXTRA)
+        print("Datos guardados correctamente")
         #Se devuelve la respuesta en formato json
         return response.json()
 
 
     def get_ticker(self):
-        ticker = input("Ingrese el ticker: ").upper()
+        ticker = input("Ingrese el ticker a pedir: \n").upper()
         return ticker
 
 
