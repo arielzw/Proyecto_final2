@@ -5,7 +5,7 @@ from Show_Data import *
 
 api = Polygon_API("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
 db = DataBase('Base.db')
-
+show = Show_Data()
 
 Repetir = True
 
@@ -19,8 +19,14 @@ while(Repetir):
     if(Option == "1"):
         db.save(api.get())
     if(Option == "2"):
-        db.read('MELI', '2022-01-03', '2022-02-01')
-        #show_data()
+        # ticker = api.get_ticker()
+        # dt_from = api.get_date("Ingrese la fecha inicial (YYYY-MM-DD): ")
+        # dt_to = api.get_date("Ingrese la fecha final (YYYY-MM-DD): ")
+        ticker = 'MELI'
+        dt_from = '2022-01-01'
+        dt_to = '2022-02-01'
+        data = db.read(ticker, dt_from, dt_to)
+        show.show(data, ticker)
     if (Option == "3"):
         print("Programa terminado")
         Repetir = False

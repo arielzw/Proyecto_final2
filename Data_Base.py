@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-import time
 import sqlite3
+import pandas as pd
 
 # Se agrega una columna "Fecha" con la mecha en YYYY-MM-DD convertida desde el timestamp de la columna t
 # pd_datos['Fecha'] = [datetime.fromtimestamp(x/1000).strftime('%Y-%m-%d') for x in pd_datos['t']]
@@ -30,12 +30,11 @@ class DataBase:
         ts_to = int(1000 * (7200 + datetime.timestamp(datetime.strptime(to_date, '%Y-%m-%d'))))
         self.__ticker = ticker
 
-        #todo Implementar la lectura de la base de datos y devolverla en una lista de diccionarios
-        #para después pasarla como argumento a show data
-        query = 'INSERT INTO ' + self.__ticker + ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
+        consulta = 'SELECT * FROM ' + self.__ticker + ' WHERE t BETWEEN ' + str(ts_from) + ' AND ' + str(ts_to) + ' ORDER BY t ASC'
+        dt_frame = pd.read_sql(con=self.con, sql=consulta, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
 
-        for item in self.__lista:
-            self.cur.execute(query, tuple(item.values()))
+        return dt_frame
+
 
     def crear_tabla(self):
         columns = ', '.join(self.__lista[0].keys())
