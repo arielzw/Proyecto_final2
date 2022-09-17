@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 import sqlite3
 import pandas as pd
 
@@ -39,10 +39,8 @@ class DataBase:
         return dt_frame
 
     def read2(self, ticker, from_date, to_date):
-        # Se suma 7200 para corregir la zona horaria, ya que BUE es -5 y NYC es -3. El timestamp devuelto por la api de
-        # polygon está en ms referido a UTC -5
-        ts_from = int(1000 * (7200 + datetime.timestamp(datetime.strptime(from_date, '%Y-%m-%d'))))
-        ts_to = int(1000 * (7200 + datetime.timestamp(datetime.strptime(to_date, '%Y-%m-%d'))))
+        ts_from = int(1000 * (datetime.timestamp(datetime.strptime(from_date, '%Y-%m-%d').replace(tzinfo=datetime.timezone.utc))))
+        ts_to = int(1000 * (datetime.timestamp(datetime.strptime(to_date, '%Y-%m-%d').replace(tzinfo=datetime.timezone.utc))))
         self.__ticker = ticker
 
         consulta = 'SELECT * FROM ' + self.__ticker + ' WHERE t BETWEEN ' + str(ts_from) + ' AND ' + str(
@@ -53,8 +51,10 @@ class DataBase:
 
     def crear_tabla(self):
         columns = ', '.join(self.__lista[0].keys())
+        self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (' + columns + ')')
+        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (t integer primary key not null on conflict ignore, ' + columns + ')')
 
-        try:
-            self.cur.execute('SELECT * FROM ' + self.__ticker)
-        except:
-            self.cur.execute('CREATE TABLE ' + self.__ticker + ' (' + columns + ')')
+        # try:
+        #     self.cur.execute('SELECT * FROM ' + self.__ticker)
+        # except:
+        #     self.cur.execute('CREATE TABLE ' + self.__ticker + ' (' + columns + ')')

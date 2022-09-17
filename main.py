@@ -17,7 +17,11 @@ while repetir_1:
     option_1 = input("¿Opción? ")
 
     if option_1 == '1':
-        db.save(api.get())
+        res = api.get()
+        if res != 0:
+            db.save(res)
+        else:
+            print("No se actualizó la base de datos")
 
     elif option_1 == '2':
         repetir_2 = True
