@@ -9,8 +9,14 @@ class Polygon_API:
 
     def get(self):
         self.__ticker = self.get_ticker()
-        self.__start_date = self.get_date("Ingrese la fecha de inicio (YYYY-MM-DD):\n")
-        self.__end_date = self.get_date("Ingrese la fecha de fin (YYYY-MM-DD):\n")
+
+        while True:
+            self.__start_date = self.get_date("Ingrese la fecha de inicio (YYYY-MM-DD):\n")
+            self.__end_date = self.get_date("Ingrese la fecha de fin (YYYY-MM-DD):\n")
+            if self.__start_date <= self.__end_date:
+                break
+            else:
+                print('ERROR: La fecha de inicio no puede ser mayor a la fecha de fin')
 
         header = {
             "Authorization": "Bearer " + self.__api_key
@@ -55,16 +61,16 @@ class Polygon_API:
         while(True):
             date = input(text)
             date_now = datetime.today()
-
+#todo Agregar comprobación que la fecha final sea menor o igual a la inicial
             #Se verifica que la fecha ingresada tenga el formato correcto
             try:
                 date = datetime.strptime(date, '%Y-%m-%d')
             except ValueError:
                 print("Formato de fecha incorrecto, debe ingresarse como YYYY-MM-DD")
             else:
-                if(date.date() > date_now.date()):
+                if date.date() > date_now.date():
                     print("La fecha ingresada no puede ser mayor a la fecha actual")
-                if(date < (date_now - timedelta(days=2*365))):
+                if date < (date_now - timedelta(days=2*365)):
                     print("La subscripción gratuita no entrega registros de más de 2 años de antiguedad") #Limitación cuenta Polygon
                 else:
                     return str(date.date())

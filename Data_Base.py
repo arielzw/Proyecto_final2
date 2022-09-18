@@ -16,7 +16,7 @@ class DataBase:
         self.__ticker = datos_json['ticker']
         self.crear_tabla()
 
-        query = 'INSERT INTO ' + self.__ticker + ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
+        query = 'INSERT OR IGNORE INTO ' + self.__ticker + ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
 
         for item in self.__lista:
             self.cur.execute(query, tuple(item.values()))
@@ -27,10 +27,12 @@ class DataBase:
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = self.cur.fetchall() #tables es una lista de tuplas de un elemento
 
+        print(f'{"Ticker":10}{"Fecha inicial":16}{"Fecha final":16}{"Registros":16}')
         for table_name in tables:
             #se debe colocar table_name[0] para que devuelva el valor y no una tupla de un elemento
             table = pd.read_sql_query("SELECT * from %s ORDER BY t ASC" % table_name[0], self.con, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
-            print(str(table_name[0]) + ' - ' + str(table.t[0]) + ' <--> ' + str(list(table.t)[-1]))
+            print(f'{str(table_name[0]):9} {str(table.t[0].strftime("%Y-%m-%d")):16}{str(list(table.t)[-1].strftime("%Y-%m-%d")):16}{int(table.size/8):5}')
+
 
     def read(self, ticker):
         self.__ticker = ticker
@@ -51,9 +53,9 @@ class DataBase:
 
     def crear_tabla(self):
         columns = ', '.join(self.__lista[0].keys())
-        self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (' + columns + ')')
-        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (t integer primary key not null on conflict ignore, ' + columns + ')')
-
+        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (' + columns + ')')
+        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER NOT NULL, n, PRIMARY KEY (t) ON CONFLICT IGNORE)')
+        self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER PRIMARY KEY NOT NULL ON CONFLICT IGNORE, n)')
         # try:
         #     self.cur.execute('SELECT * FROM ' + self.__ticker)
         # except:

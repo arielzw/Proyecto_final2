@@ -37,8 +37,7 @@ while repetir_1:
                 db.summary()
 
             elif option_2 == '2':
-                #ticker = api.get_ticker()
-                ticker = 'MELI'
+                ticker = api.get_ticker()
                 data = db.read(ticker)
                 show.graph(data, ticker)
 

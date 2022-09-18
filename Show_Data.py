@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 
 
 class Show_Data():
-
+#todo corregir ausencia de datos para que no interpole
+#todo corregir que las lineas secundarias no coinciden con los ticks
     def graph(self, dtf, ticker):
-        print(dtf)
         fig, ax = plt.subplots()
         fig.subplots_adjust(bottom=0.21)
-    #    ax.set_xticks = (20)
+        #    ax.set_xticks = (20)
 
         ax.set_xlabel('Fecha')
         ax.tick_params(axis='x', labelrotation=-45, width=2, which='major')
@@ -24,9 +24,6 @@ class Show_Data():
         plt.minorticks_on()
         plt.legend()
         plt.show()
-
-
-
 
 
 
