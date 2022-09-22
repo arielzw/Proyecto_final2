@@ -61,7 +61,7 @@ class Polygon_API:
         while(True):
             date = input(text)
             date_now = datetime.today()
-#todo Agregar comprobación que la fecha final sea menor o igual a la inicial
+
             #Se verifica que la fecha ingresada tenga el formato correcto
             try:
                 date = datetime.strptime(date, '%Y-%m-%d')
