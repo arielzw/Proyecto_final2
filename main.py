@@ -1,10 +1,10 @@
 from Polygon_API import *
-from Data_Base import *
+from Database import *
 from Show_Data import *
 
 
 api = Polygon_API("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
-db = DataBase('Base.db')
+
 show = Show_Data()
 
 repetir_1 = True

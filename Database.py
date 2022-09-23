@@ -1,11 +1,10 @@
-from datetime import datetime, timezone
+from datetime import datetime
 import sqlite3
 import pandas as pd
 
-# Se agrega una columna "Fecha" con la mecha en YYYY-MM-DD convertida desde el timestamp de la columna t
-# pd_datos['Fecha'] = [datetime.fromtimestamp(x/1000).strftime('%Y-%m-%d') for x in pd_datos['t']]
 
-class DataBase:
+
+class Database:
     def __init__(self, file):
         self.con = sqlite3.connect(file)
         self.cur = self.con.cursor()
@@ -14,7 +13,9 @@ class DataBase:
     def save(self, datos_json):
         self.__lista = datos_json['results']
         self.__ticker = datos_json['ticker']
-        self.crear_tabla()
+
+        self.cur.execute(
+            'CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER PRIMARY KEY NOT NULL ON CONFLICT IGNORE, n)')
 
         query = 'INSERT OR IGNORE INTO ' + self.__ticker + ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
 
@@ -51,12 +52,5 @@ class DataBase:
 
         return dt_frame
 
-    def crear_tabla(self):
-        columns = ', '.join(self.__lista[0].keys())
-        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (' + columns + ')')
-        #self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER NOT NULL, n, PRIMARY KEY (t) ON CONFLICT IGNORE)')
-        self.cur.execute('CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER PRIMARY KEY NOT NULL ON CONFLICT IGNORE, n)')
-        # try:
-        #     self.cur.execute('SELECT * FROM ' + self.__ticker)
-        # except:
-        #     self.cur.execute('CREATE TABLE ' + self.__ticker + ' (' + columns + ')')
+
+
