@@ -1,15 +1,19 @@
 from datetime import datetime, timedelta
 import requests
 
-class Polygon_API:
+
+class PolygonAPI:
     def __init__(self, url, key):
+        self.__request_url = None
+        self.__end_date = None
+        self.__start_date = None
+        self.__ticker = None
         self.__url = url
         self.__api_key = key
 
-
     def get(self):
         self.__ticker = self.get_ticker()
-
+#todo ver de implementar la barra de progreso llamando este proceso en segundo plano y haciendo una animación
         while True:
             self.__start_date = self.get_date("Ingrese la fecha de inicio (YYYY-MM-DD):\n")
             self.__end_date = self.get_date("Ingrese la fecha de fin (YYYY-MM-DD):\n")

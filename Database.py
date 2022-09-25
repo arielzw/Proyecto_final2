@@ -14,17 +14,40 @@ class Database:
         self.__lista = datos_json['results']
         self.__ticker = datos_json['ticker']
 
-        self.cur.execute(
-            'CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER PRIMARY KEY NOT NULL ON CONFLICT IGNORE, n)')
+        query = 'CREATE TABLE IF NOT EXISTS ' + self.__ticker + ' (v, vw, o, c, h, l, t INTEGER PRIMARY KEY NOT NULL ON CONFLICT IGNORE, n)'
+        self.cur.execute(query)
 
         query = 'INSERT OR IGNORE INTO ' + self.__ticker + ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)'
-
         for item in self.__lista:
             self.cur.execute(query, tuple(item.values()))
 
+        # query = 'SELECT * FROM ' + self.__ticker + 'ORDER BY t ASCENDING'
+        # self.cur.execute(query)
+        # table = tables = self.cur.fetchall()
+        # print(table)
+
+        query = 'CREATE TABLE IF NOT EXISTS ' + self.__ticker + '_RANGES' + ' (fecha_inicio, fecha_fin)'
+        self.cur.execute(query)
+
+        # query = 'INSERT OR IGNORE INTO ' + self.__ticker + '_RANGES' + ' VALUES(, ?)'
+        # self.cur.execute(query)
+
         self.con.commit()
 
+
     def summary(self):
+        ####
+        self.__ticker = 'MELI'
+        query = 'SELECT * FROM ' + 'MELI' + ' ORDER BY t ASC'
+        print(query)
+        self.cur.execute(query)
+        table = tables = self.cur.fetchall()
+        print(table)
+
+        ####
+
+
+
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = self.cur.fetchall() #tables es una lista de tuplas de un elemento
 
@@ -36,6 +59,7 @@ class Database:
 
 
     def read(self, ticker):
+        #todo contemplar la inexistencia el ticker
         self.__ticker = ticker
         consulta = 'SELECT * FROM ' + self.__ticker + ' ORDER BY t ASC'
         dt_frame = pd.read_sql(con=self.con, sql=consulta, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})

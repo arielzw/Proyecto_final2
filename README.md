@@ -20,7 +20,7 @@ El software consta de 3 módulos fundamentales:
 
 Para cada uno de los módulos se implementa una clase encargada de gestionar todas las funciones relacionadas. La gestión de la interfaz de usuario es delegada al programa principal, ya que dicha función es específica para cada aplicación por lo que no se busca la modularización de la misma.
 
-## Clase Polygon_API
+## Clase PolygonAPI
 Esta clase permite acceder a los datos de stocks de la API Polygon.io. 
 Se utiliza esta API por ser la propuesta por la consigna y porque cumple con los requisitos del software aunque conociendo las limitaciones que genera la utilización de una Key gratuita:
 * Solo se pueden acceder a datos de hasta dos años de antigüedad: Se considera suficiente para el testeo de la aplicación
@@ -62,12 +62,12 @@ Se opta por obtener un período de agregación de 1 día de forma de obtener la 
 
 Al instanciar la clase se llama a la función constructora, enviando como argumento dirección de la API y la key:
 ```phyton
-api = Polygon_API("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
+api = PolygonAPI("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
 ```
 Ambos argumentos se guardan en variables de instancia privadas (ya que no deben ser modificadas por fuera de la clase):
 
 ```python
-class Polygon_API:
+class PolygonAPI:
     def __init__(self, url, key):
         self.__url = url
         self.__api_key = key

@@ -1,10 +1,10 @@
-from Polygon_API import *
+from PolygonAPI import *
 from Database import *
 from Show_Data import *
 
 
-api = Polygon_API("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
-
+api = PolygonAPI("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
+db = Database('Base.db')
 show = Show_Data()
 
 repetir_1 = True
@@ -41,7 +41,7 @@ while repetir_1:
                 data = db.read(ticker)
                 show.graph(data, ticker)
 
-            elif (option_2 == '3'):
+            elif option_2 == '3':
                 repetir_2 = False
 
             else:
