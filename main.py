@@ -1,32 +1,30 @@
 from PolygonAPI import *
 from Database import *
-from Show_Data import *
+from ShowData import *
+from colorama import Fore
 
-
+# Declaración de objetos
 api = PolygonAPI("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
 db = Database('Base.db')
-show = Show_Data()
+show = ShowData()
 
-repetir_1 = True
-
-while repetir_1:
+while True:
     print("\nIngrese una opción:")
-    print("1. Actualización de datos")
+    print(f"1. Actualización de datos")
     print("2. Visualización de datos")
     print("3. Para salir")
     option_1 = input("¿Opción? ")
 
     if option_1 == '1':
-        res = api.get()
-        if res != 0:
-            db.save(res)
+        res = api.get()     # Se recibe un json con los resultados de la consulta
+        if res != 0:        # Si no hubo errores se guarda en la base de datos
+            db.save(res, api.start_date, api.end_date)
+            print('Datos guardados correctamente')
         else:
-            print("No se actualizó la base de datos")
+            print(f"{Fore.YELLOW}No se actualizó la base de datos{Fore.RESET}")
 
     elif option_1 == '2':
-        repetir_2 = True
-
-        while repetir_2:
+        while True:
             print("\nIngrese una opción:")
             print("1. Ver resumen")
             print("2. Ver gráfico")
@@ -35,22 +33,22 @@ while repetir_1:
 
             if option_2 == '1':
                 db.summary()
-
             elif option_2 == '2':
-                ticker = api.get_ticker()
-                data = db.read(ticker)
-                show.graph(data, ticker)
-
+                while True:
+                    ticker = api.get_ticker()
+                    data = db.read(ticker)
+                    if not data.empty:
+                        break
+                rangos = db.get_ranges(ticker)
+                print(rangos)
+                show.graph(data, ticker, rangos)
             elif option_2 == '3':
-                repetir_2 = False
-
+                break
             else:
                 print("Ingreso incorrecto !!!")
 
     elif option_1 == '3':
         print("Programa terminado")
-        repetir_1 = False
-
+        break
     else:
         print("Ingreso incorrecto !!!")
-
