@@ -8,7 +8,7 @@ Se implementa un programa que permite leer datos de una API de finanzas, guardar
 * Se implementa chequeo de errores de ingreso de usuario (Ticker inválido, formato de fecha incorrecto, rango de fecha incorrecto) y de la API (Excepción de request, timeout, error http, etc.).
 * Se avisa al usuario que no se obtuvieron resultados (en caso de que el rango de fechas sea feriado)
 * Se previene la carga de datos duplicados en la DB
-* Se muestra un sumario de los datos en la DB indicando Ticker, fecha del registro más antiguo, fecha del registro más reciente y cantidad de registros para ese Ticker.
+* Se muestra un sumario de los datos en la DB indicando el ticker, y rangos de fechas almacenados para el mismo.
 * Se muestran los datos en forma gráfica, graficando el valor de Apertura, Cierre, Máximo y Mínimo.
 
 
