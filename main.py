@@ -1,12 +1,16 @@
-from PolygonAPI import *
-from Database import *
-from ShowData import *
-from colorama import Fore
+import PolygonAPI
+import Database
+import ShowData
+from colorama import Fore, init
+
+
+# Llamado al método init de la librería colorama para que los colores funcionen en Windows
+init(convert=True)
 
 # Declaración de objetos
-api = PolygonAPI("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
-db = Database('Base.db')
-show = ShowData()
+api = PolygonAPI.PolygonAPI("https://api.polygon.io/v2", "c7Eb8zf4Eptgc6WyITtNPrbJITWpxp_i")
+db = Database.Database('Base.db')
+show = ShowData.ShowData()
 
 while True:
     print("\nIngrese una opción:")
@@ -34,14 +38,13 @@ while True:
             if option_2 == '1':
                 db.summary()
             elif option_2 == '2':
-                while True:
+                while True:     # Se realiza un ciclo hasta que los datos ingresados sean correctos
                     ticker = api.get_ticker()
                     data = db.read(ticker)
-                    if not data.empty:
+                    if not data.empty:  # Si la función no devolvió error, salir
                         break
-                rangos = db.get_ranges(ticker)
-                print(rangos)
-                show.graph(data, ticker, rangos)
+                rangos = db.get_ranges(ticker)  # Se obtienen los rangos de datos guardados para el ticker seleccionado
+                show.graph(data, ticker, rangos)    # Se grafica el rango seleccionado
             elif option_2 == '3':
                 break
             else:

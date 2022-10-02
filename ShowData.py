@@ -3,7 +3,6 @@ import datetime
 
 
 class ShowData:
-    # todo corregir que las lineas secundarias no coinciden con los ticks. Se nota con datos largos (1 año)
     def graph(self, dtf, ticker, rangos):
         fig, ax = plt.subplots()
         fig.subplots_adjust(bottom=0.21)

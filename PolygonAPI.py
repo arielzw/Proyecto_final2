@@ -5,16 +5,18 @@ from colorama import Fore
 
 class PolygonAPI:
     def __init__(self, url, key):
-        self.__request_url = None
+        # Inicialización de variables de instancia
         self.end_date = None
         self.start_date = None
         self.ticker = None
+
+        # Declaración de variables privadas
         self.__url = url
         self.__api_key = key
 
     def get(self):
         self.ticker = self.get_ticker()
-    # todo ver de implementar la barra de progreso llamando este proceso en segundo plano y haciendo una animación
+
         while True:
             self.start_date = self.get_date("Ingrese la fecha de inicio (YYYY-MM-DD):\n")
             self.end_date = self.get_date("Ingrese la fecha de fin (YYYY-MM-DD):\n")
@@ -29,10 +31,10 @@ class PolygonAPI:
 
         print("Obteniendo datos...")
 
-        self.__request_url = self.__url + "/aggs/ticker/" + self.ticker + "/range/1/day/" + self.start_date + "/" + \
+        request_url = self.__url + "/aggs/ticker/" + self.ticker + "/range/1/day/" + self.start_date + "/" + \
                              self.end_date + "?adjusted=true&sort=asc&limit=15000"
         try:
-            response = requests.get(self.__request_url, headers=header)
+            response = requests.get(request_url, headers=header)
             response.raise_for_status()
         except requests.exceptions.Timeout:
             print(f'{Fore.YELLOW}Error de Timeout{Fore.RESET}')
@@ -43,7 +45,7 @@ class PolygonAPI:
         except requests.exceptions.HTTPError as err:
             print(f"{Fore.YELLOW}ERROR:{Fore.RESET}", err)
             return 0
-        except requests.exceptions.RequestException as err:
+        except requests.exceptions.RequestException:
             print(f"{Fore.YELLOW}ERROR: El servidor no responde. Verifique la conexión{Fore.RESET}")
             return 0
         except:
@@ -54,7 +56,6 @@ class PolygonAPI:
                 print(f'{Fore.YELLOW}No se obtuvieron resultados, verifique ticker y rango de fechas{Fore.RESET}')
                 return 0
             else:
-
                 return response.json()
 
     def get_ticker(self):

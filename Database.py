@@ -51,7 +51,7 @@ class Database:
         while True:
             try:
                 item = int(input('Seleccione el rango a graficar: '))
-            except:
+            except ValueError:
                 print('Ingreso incorrecto !!!')
             else:
                 if 0 < item <= len(lista):
@@ -64,7 +64,7 @@ class Database:
         consulta = 'SELECT * FROM ' + self.__ticker + ' ORDER BY t ASC'
         try:
             dt_frame = pd.read_sql(con=self.con, sql=consulta, parse_dates={'t': {'unit': 'ms', 'errors': 'ignore'}})
-        except:
+        except Exception:
             print(f"{Fore.YELLOW}ERROR: Ticker no encontrado{Fore.RESET}")
             return pd.DataFrame(None)
         else:
